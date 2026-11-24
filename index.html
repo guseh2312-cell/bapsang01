@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>오늘의 밥상</title>
+<style>
+  :root {
+    --paper: #f6ecd9;      /* 한지 */
+    --ink: #3b2a1e;        /* 먹색 갈색 */
+    --wood: #8b5a2b;       /* 소반 나무 */
+    --wood-dark: #5e3a1a;
+    --wood-light: #b07a45;
+    --red: #b5452f;        /* 고춧가루 붉은색 */
+    --card: #fffaf0;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    padding: 32px 16px;
+    font-family: "Noto Serif KR", "Nanum Myeongjo", "Batang", serif;
+    color: var(--ink);
+    background:
+      radial-gradient(circle at 20% 15%, rgba(255,255,255,.5), transparent 40%),
+      radial-gradient(circle at 80% 85%, rgba(181,69,47,.08), transparent 45%),
+      var(--paper);
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(28px, 5vw, 40px);
+    letter-spacing: .2em;
+    color: var(--wood-dark);
+  }
+  h1::after {
+    content: "";
+    display: block;
+    width: 48px;
+    height: 3px;
+    margin: 10px auto 0;
+    background: var(--red);
+    border-radius: 2px;
+  }
+
+  /* 둥근 상 */
+  .table {
+    position: relative;
+    width: min(86vw, 460px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background:
+      repeating-radial-gradient(circle at 50% 50%,
+        rgba(0,0,0,.035) 0 6px, transparent 6px 14px),
+      radial-gradient(circle at 40% 35%, var(--wood-light), var(--wood) 60%, var(--wood-dark));
+    box-shadow:
+      inset 0 0 0 10px var(--wood-dark),
+      inset 0 0 0 13px rgba(255,255,255,.15),
+      0 18px 0 -4px #4a2c13,
+      0 30px 40px rgba(59,42,30,.35);
+  }
+
+  /* 반찬 목록: HTML에 직접 쓰는 곳 */
+  .dishes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    inset: 0;
+  }
+
+  .dishes li {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 96px;
+    padding: 12px 8px 10px;
+    transform: translate(-50%, -50%);
+    background: var(--card);
+    border-radius: 16px;
+    border: 2px solid #e6d3b3;
+    box-shadow: 0 6px 12px rgba(59,42,30,.25);
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+    transition: transform .2s ease;
+  }
+  .dishes li:hover {
+    transform: translate(-50%, -50%) translateY(-6px) scale(1.05);
+  }
+  .dishes li::before {
+    content: attr(data-emoji);
+    display: block;
+    font-size: 40px;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  footer {
+    font-size: 14px;
+    opacity: .6;
+  }
+</style>
+</head>
+<body>
+
+  <h1>오늘의 밥상</h1>
+
+  <div class="table">
+    <!--
+      ▼ 반찬 목록 ▼
+      한 줄에 하나씩 추가하세요.  예)  <li data-emoji="🥚">계란말이</li>
+    -->
+    <ul class="dishes" id="dishes">
+      <li data-emoji="🍚">밥</li>
+      <li data-emoji="🍲">국</li>
+      <li data-emoji="🌶️">김치</li>
+      <li data-emoji="🥚">계란말이</li>
+    </ul>
+  </div>
+
+  <footer>맛있게 드세요</footer>
+
+<script>
+  // 목록에 있는 카드들을 둥근 상 위에 고르게 배치합니다.
+  (function () {
+    const items = document.querySelectorAll('#dishes li');
+    const n = items.length;
+    if (n === 1) return; // 하나면 가운데
+    const radius = n <= 3 ? 26 : n <= 6 ? 30 : 33; // 상 크기 대비 %
+    items.forEach((li, i) => {
+      const angle = (i / n) * Math.PI * 2 - Math.PI / 2; // 12시 방향부터
+      li.style.left = (50 + radius * Math.cos(angle)) + '%';
+      li.style.top  = (50 + radius * Math.sin(angle)) + '%';
+    });
+  })();
+</script>
+</body>
+</html>
